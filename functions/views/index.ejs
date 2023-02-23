@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>My Bolt Demo App</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script
+  id="bolt-connect"
+  type="text/javascript"
+  src="<%=connectURL%>/connect.js%>"
+  data-publishable-key="<%=publishableKey%>"
+></script>
+</head>
+<body>
+    <h1>The Bolt Demo Store</h1>
+        <div data-tid="instant-bolt-checkout-button">
+            <object data="https://connect-sandbox.bolt.com/v1/checkout_button?publishable_key=<%=publishableKey%>"} />
+        </div>
+</body>
+<script>
+    function getEmail(){
+        return localStorage.getItem("boltEmail");
+    }
+</script>
+<script>
+    var hints = {}
+    var callbacks = {
+      check : function () {
+          // Executes just before the checkout form loads.
+          // Must return a boolean that will determine if Bolt should proceed with checkout.
+          return true;
+      },
+      onCheckoutStart : function () {
+          // Executes after the checkout form is presented to the user
+      },
+      onEmailEnter: function (email) {
+          // Executes after the user enters their email address.
+      },
+      onShippingDetailsComplete: function (address) {
+          // Executes when the user proceeds to the shipping options page.
+          // This is applicable only to multi-step checkout.
+          // When available the first parameter will contain a user's name and address info.
+      },
+      onShippingOptionsComplete: function () {
+          // Executes when the user proceeds to the payment details page.
+          // This is applicable only to multi-step checkout.
+      },
+      onPaymentSubmit: function () {
+          // Executes after the user clicks the pay button.
+      },
+      success: function (transaction, callback) {
+          // Executes when the Bolt checkout transaction is successful.
+          // **IMPORTANT** callback() must be executed at the end of the success function
+          callback()
+      },
+      close: function () {
+          // This function is called when the Bolt checkout modal is closed.
+          // This will not be called when create_order endpoint returns a valid URL
+          // and authorization is successful
+      }
+  }
+    var orderToken = "<%=token%>"
+    var cart = {orderToken}
+    BoltCheckout.configure(cart, hints, callbacks)
+</script>
+
+</html>
